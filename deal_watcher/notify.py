@@ -39,7 +39,23 @@ def send_digest(matches: list[dict[str, object]]) -> None:
         with smtplib.SMTP_SSL(os.environ["SMTP_HOST"], int(os.getenv("SMTP_PORT", "465"))) as client:
             client.login(os.environ["SMTP_USERNAME"], os.environ["SMTP_PASSWORD"])
             client.send_message(message)
+    elif channel == "github_issue":
+        repository = os.environ["GITHUB_REPOSITORY"]
+        token = os.environ["GITHUB_TOKEN"]
+        notify_user = os.getenv("GITHUB_NOTIFY_USER", "")
+        mention = f"@{notify_user}\n\n" if notify_user else ""
+        response = requests.post(
+            f"https://api.github.com/repos/{repository}/issues",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {token}",
+                "X-GitHub-Api-Version": "2026-03-10",
+            },
+            json={"title": f"Tech deal alert: {len(matches)} match(es)", "body": mention + body},
+            timeout=20,
+        )
+        response.raise_for_status()
     elif channel:
-        raise ValueError("NOTIFICATION_CHANNEL must be 'teams' or 'smtp'")
+        raise ValueError("NOTIFICATION_CHANNEL must be 'teams', 'smtp', or 'github_issue'")
     else:
         print(body)

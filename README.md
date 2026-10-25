@@ -17,6 +17,7 @@ The workflow runs every six hours from November 20 through November 30 (UTC), pl
 
 | Channel | Required secrets |
 | --- | --- |
+| GitHub notification issue | `NOTIFICATION_CHANNEL=github_issue` (no mail credentials); GitHub sends it to your configured GitHub notification address |
 | Microsoft Teams | `NOTIFICATION_CHANNEL=teams`, `TEAMS_WEBHOOK_URL` |
 | SMTP email | `NOTIFICATION_CHANNEL=smtp`, `SMTP_HOST`, `SMTP_PORT` (optional; defaults to 465), `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TO` |
 

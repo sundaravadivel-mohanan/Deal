@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from deal_watcher.core import Deal, WatchItem, fetch_feed, infer_retailer, matches, parse_price
+from deal_watcher.notify import send_digest
 
 
 def test_parse_price_uses_dollar_price_and_handles_commas():
@@ -36,3 +37,25 @@ def test_feed_fixture_is_parsed(monkeypatch):
 
 def test_costco_is_inferred_from_its_url():
     assert infer_retailer("Nintendo Switch 2", "https://www.costco.com/example.html") == "costco"
+
+
+def test_github_issue_notification_mentions_configured_user(monkeypatch):
+    captured = {}
+
+    class Response:
+        def raise_for_status(self): pass
+
+    def post(url, **kwargs):
+        captured["url"] = url
+        captured.update(kwargs)
+        return Response()
+
+    monkeypatch.setenv("NOTIFICATION_CHANNEL", "github_issue")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "owner/repo")
+    monkeypatch.setenv("GITHUB_TOKEN", "token")
+    monkeypatch.setenv("GITHUB_NOTIFY_USER", "sundaravadivel-mohanan")
+    monkeypatch.setattr("deal_watcher.notify.requests.post", post)
+    send_digest([{"item": "Switch 2", "price": 449.99, "target": 449.99,
+                  "retailer": "costco", "link": "https://example.test", "lowest": True}])
+    assert captured["url"] == "https://api.github.com/repos/owner/repo/issues"
+    assert captured["json"]["body"].startswith("@sundaravadivel-mohanan")
