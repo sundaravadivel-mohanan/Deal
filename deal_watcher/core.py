@@ -18,7 +18,7 @@ USER_AGENT = "NovemberTechDealWatcher/1.0 (+https://github.com/your-org/november
 DEFAULT_FEEDS = (
     "https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&searchin=first&rss=1",
 )
-RETAILERS = ("amazon", "bestbuy", "walmart", "target")
+RETAILERS = ("amazon", "bestbuy", "costco", "walmart", "target")
 
 
 @dataclass(frozen=True)

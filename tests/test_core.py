@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from deal_watcher.core import Deal, WatchItem, fetch_feed, matches, parse_price
+from deal_watcher.core import Deal, WatchItem, fetch_feed, infer_retailer, matches, parse_price
 
 
 def test_parse_price_uses_dollar_price_and_handles_commas():
@@ -26,3 +26,7 @@ def test_feed_fixture_is_parsed(monkeypatch):
     assert len(deals) == 2
     assert deals[0].retailer == "bestbuy"
     assert deals[0].price == 299.99
+
+
+def test_costco_is_inferred_from_its_url():
+    assert infer_retailer("Nintendo Switch 2", "https://www.costco.com/example.html") == "costco"
