@@ -76,6 +76,9 @@ def infer_retailer(title: str, link: str) -> str:
 
 def matches(item: WatchItem, deal: Deal) -> bool:
     title = deal.title.lower()
+    # Feed titles use both brand spellings; normalize them so a PS5 watch does
+    # not miss a deal titled "PlayStation 5" (and vice versa).
+    title = re.sub(r"\bplaystation\s*5\b", "ps5 playstation 5", title)
     return (
         all(keyword in title for keyword in item.keywords)
         and deal.price <= item.target_price

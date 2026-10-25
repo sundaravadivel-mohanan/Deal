@@ -16,6 +16,12 @@ def test_match_requires_every_keyword_target_and_retailer():
     assert not matches(item, Deal(deal.title, 299.99, "amazon", deal.link, ""))
 
 
+def test_ps5_keyword_matches_playstation_5_spelling():
+    item = WatchItem("PS5 Console", ("ps5", "console"), 600, ("target",))
+    deal = Deal("PlayStation 5 console bundle", 599.99, "target", "https://x", "")
+    assert matches(item, deal)
+
+
 def test_feed_fixture_is_parsed(monkeypatch):
     class Response:
         content = Path("tests/fixtures/deals.xml").read_bytes()

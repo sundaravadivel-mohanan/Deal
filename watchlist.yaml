@@ -1,8 +1,13 @@
-# Add the products you want to watch before enabling the scheduled workflow.
-# Example:
-# items:
-#   - name: "Sony WH-1000XM6"
-#     keywords: ["sony", "wh-1000xm6"]
-#     target_price: 299.99
-#     retailers: [amazon, bestbuy, walmart, target]
-items: []
+items:
+  - name: "Nintendo Switch 2"
+    keywords: ["nintendo", "switch 2"]
+    target_price: 449.99
+    retailers: [costco, walmart, target]
+  - name: "PS5 Console"
+    keywords: ["ps5", "console"]
+    target_price: 599.99
+    retailers: [costco, walmart, target]
+  - name: "PS5 Digital Edition"
+    keywords: ["ps5", "digital"]
+    target_price: 549.99
+    retailers: [costco, walmart, target]
