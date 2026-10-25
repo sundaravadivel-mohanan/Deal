@@ -1,0 +1,8 @@
+# Add the products you want to watch before enabling the scheduled workflow.
+# Example:
+# items:
+#   - name: "Sony WH-1000XM6"
+#     keywords: ["sony", "wh-1000xm6"]
+#     target_price: 299.99
+#     retailers: [amazon, bestbuy, walmart, target]
+items: []

@@ -1,0 +1,39 @@
+name: November tech deal watcher
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions cron is UTC. Runs every six hours Nov 20–30 inclusive.
+    - cron: '0 */6 20-30 11 *'
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - run: python main.py
+        env:
+          NOTIFICATION_CHANNEL: ${{ secrets.NOTIFICATION_CHANNEL }}
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
+          DEAL_FEEDS: ${{ vars.DEAL_FEEDS }}
+      - name: Persist deal state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          git diff --cached --quiet || git commit -m "chore: update deal watcher state"
+          git push

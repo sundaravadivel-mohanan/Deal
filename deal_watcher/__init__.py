@@ -1,0 +1,1 @@
+"""Feed-first deal watcher."""
